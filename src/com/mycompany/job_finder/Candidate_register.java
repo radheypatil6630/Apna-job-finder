@@ -6,6 +6,7 @@ package com.mycompany.job_finder;
 
 
 import java.sql.*;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 /**
  *
@@ -33,6 +34,8 @@ public class Candidate_register extends javax.swing.JFrame {
 
             label2.setBounds(1100,20,300,40);
            jButton1.setBounds(1450, 20,70, 40);//login
+           
+           setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     public  String candidate_id_generator(String username,String candidate_name){

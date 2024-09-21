@@ -5,11 +5,17 @@
 package com.mycompany.job_finder;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -18,12 +24,14 @@ import javax.swing.JOptionPane;
 public class Job_apply extends javax.swing.JFrame {
 
     String candidate_nametxt, candidate_idtxt, mobile_notxt,jobNametxt, jobSalarytxt, recruiter_nametxt, recruiter_idtxt;
-    String statustxt="accept";
+    String statustxt="pending";
+     private String resumeName;
+  
      
       public void  passData(String candidate_name,String candidate_id,String mobile_no,String jobName,String jobSalary,String recruiter_name,String recruiter_id){
       this.candidate_idtxt=candidate_id;
       this.jobSalarytxt=jobSalary;
-//      this.statustxt=status;
+
       this.recruiter_idtxt=recruiter_id;
       this.candidate_nametxt=candidate_name;
       this.jobNametxt=jobName;
@@ -56,10 +64,27 @@ public class Job_apply extends javax.swing.JFrame {
          mob_no_field.setBounds(40, 390, 200, 50);
          Mobile_name.setBounds(300, 390, 370, 50);
          resume_field.setBounds(40, 470, 200, 50);
-         upload_resume.setBounds(300, 470, 370, 50);
+    
          jButton1.setBounds(200, 580, 130, 70);
          
-        
+         upload_resume.setBounds(300, 470, 370, 50);
+         jButton2.setBounds(570, 530, 70, 30);     
+//              
+//          upload_resume.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//              JFileChooser fileChooser = new JFileChooser();
+//                fileChooser.setFileFilter(new FileNameExtensionFilter("PDF Files", "pdf"));
+//                int returnValue = fileChooser.showOpenDialog(null);
+//                if (returnValue == JFileChooser.APPROVE_OPTION) {
+//                    File selectedFile = fileChooser.getSelectedFile();
+//                    resumeName = selectedFile.getName(); // Set the resume name
+//                    upload_resume.setText(selectedFile.getAbsolutePath());
+//                }
+//            }
+//        });
+         
+         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 //         upload_resume.setEditable(false);
          
          //disble component
@@ -67,19 +92,56 @@ public class Job_apply extends javax.swing.JFrame {
          candidate_nametextfield.setEditable(false);
          Recruiter_name.setEditable(false);
          Mobile_name.setEditable(false);
-         upload_resume.setEditable(false);
+        // upload_resume.setEditable(false);
        
     // System.out.println("job apply page \n name="+candidate_name+"\n mob="+mobile_no+" candidate id="+candidate_id+"\n jobname="+jobName+"\n job salary="+jobSalary+"\n job status="+statustxt+"\nrecruiter name="+recruiter_name+"\nrecruiter id="+recruiter_id);
    }
 
-   public void insertData(String candidate_name,String mobile_no,String jobName,String recruiter_name){
+//    private void loadCompanyData() {
+//    String url = "jdbc:mysql://localhost:3306/jobfinder?serverTimezone=UTC";
+//    String db_username = "root";
+//    String db_password = "root";
+//
+//    try (Connection conn = DriverManager.getConnection(url, db_username, db_password)) {
+////        System.out.println("Connection established");
+//
+//        String sql = "SELECT * FROM company_registration";
+//        System.out.println("Executing SQL query: " + sql);
+//        PreparedStatement pstmt = conn.prepareStatement(sql);
+//        ResultSet rs = pstmt.executeQuery();
+//
+////        // Print ResultSet metadata
+////        ResultSetMetaData rsmd = rs.getMetaData();
+////        int columnsNumber = rsmd.getColumnCount();
+//
+//
+//        boolean hasData = false;
+////        data.clear(); // Clear the data list before adding new data
+//
+//        while (rs.next()) {
+//            recruiter_name=rs.getString("recruiter_name");
+//            recruiter_id=rs.getString("recruiter_id");
+//            
+////             System.out.println(" job_search ------  \n recruite name ="+recruiter_name+"\n recruiter id="+recruiter_id);
+//        }
+//        
+//          System.out.println(" job_search ------  \n recruite name ="+recruiter_name+"\n recruiter id="+recruiter_id);
+//
+//        
+//
+//    } catch (SQLException e) {
+//        e.printStackTrace();
+//    }
+//}
+    
+   public void insertData(String candidate_name,String mobile_no,String jobName,String recruiter_name, String resumeName){
         String url = "jdbc:mysql://localhost:3306/jobfinder";
         String db_username = "root";
         String db_password = "root";
 
         try (Connection conn = DriverManager.getConnection(url, db_username, db_password)) {
             
-            String sql = "INSERT INTO applied_jobs (candidate_name, candidate_id,job_name, mobile_no, job_salary,status,recruiter_name,recruiter_id) VALUES (?, ?, ?, ?,?,?,?,?)";
+            String sql = "INSERT INTO applied_jobs (candidate_name, candidate_id,job_name, mobile_no, job_salary,status,recruiter_name,recruiter_id, resume_name) VALUES (?,?, ?, ?, ?,?,?,?,?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, candidate_name);
             pstmt.setString(2, candidate_idtxt);
@@ -89,6 +151,7 @@ public class Job_apply extends javax.swing.JFrame {
             pstmt.setString(6, statustxt);
             pstmt.setString(7, jobName);
             pstmt.setString(8, recruiter_idtxt);
+            pstmt.setString(9, resumeName);
             System.out.println("username="+mobile_no+"recruiter id ="+recruiter_name+""+jobName);
             pstmt.executeUpdate();
 
@@ -122,6 +185,7 @@ public class Job_apply extends javax.swing.JFrame {
         resume_field = new javax.swing.JLabel();
         mob_no_field = new javax.swing.JLabel();
         upload_resume = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -194,6 +258,19 @@ public class Job_apply extends javax.swing.JFrame {
         upload_resume.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         upload_resume.setText("Upload resume");
         upload_resume.setToolTipText("upload resume");
+        upload_resume.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                upload_resumeActionPerformed(evt);
+            }
+        });
+
+        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jButton2.setText("Add");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -227,10 +304,13 @@ public class Job_apply extends javax.swing.JFrame {
                                 .addComponent(job_name, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(Recruiter_name, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(Mobile_name, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(upload_resume, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(23, 23, 23)
-                                .addComponent(candidate_nametextfield, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(candidate_nametextfield, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(upload_resume, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jButton2)
+                                .addGap(35, 35, 35))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(282, 282, 282)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -267,9 +347,11 @@ public class Job_apply extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(resume_field, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(upload_resume, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(46, 46, 46)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2)
+                .addGap(17, 17, 17)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(450, Short.MAX_VALUE))
+                .addContainerGap(446, Short.MAX_VALUE))
         );
 
         pack();
@@ -284,9 +366,24 @@ public class Job_apply extends javax.swing.JFrame {
     }//GEN-LAST:event_candidate_nametextfieldActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        insertData(candidate_nametextfield.getText(), job_name.getText(), Recruiter_name.getText(), Mobile_name.getText());
+        insertData(candidate_nametextfield.getText(), job_name.getText(), Recruiter_name.getText(), Mobile_name.getText(),resumeName);
     
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void upload_resumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upload_resumeActionPerformed
+  
+    }//GEN-LAST:event_upload_resumeActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+       JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileNameExtensionFilter("PDF Files", "pdf"));
+        int returnValue = fileChooser.showOpenDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            resumeName = selectedFile.getName(); // Set the resume name
+            upload_resume.setText(selectedFile.getAbsolutePath());
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
    
     /**
      * @param args the command line arguments
@@ -330,6 +427,7 @@ public class Job_apply extends javax.swing.JFrame {
     private javax.swing.JTextField candidate_nametextfield;
     private javax.swing.JLabel company_name;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField job_name;
     private javax.swing.JLabel job_name_field;

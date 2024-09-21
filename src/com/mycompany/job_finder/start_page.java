@@ -5,6 +5,7 @@
 package com.mycompany.job_finder;
 
 import java.sql.*;
+import javax.swing.JFrame;
     
 /**
  *
@@ -29,9 +30,8 @@ public class start_page extends javax.swing.JFrame {
             jLabel2.setBounds(600, 430,100, 40);
             jButton1.setBounds(870, 480,350, 60);
             jButton2.setBounds(670, 480,350, 60);
-//          ImageLabel.setBounds(0, 0, 1540, 1000);
-//          jLabel1.setAlignmentX(800);
-//          jLabel1.setAlignmentY(400);
+
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     /**

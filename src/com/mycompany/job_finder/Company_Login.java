@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -30,6 +31,8 @@ public class Company_Login extends javax.swing.JFrame {
           jButton1.setBounds(530, 430,200, 50);
           jButton2.setBounds(760, 430,200, 50);
           jButton3.setBounds(10, 740,80, 40);
+         
+          setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -182,8 +185,12 @@ public class Company_Login extends javax.swing.JFrame {
                 dispose();//close the login page
                 String recruiter_name=rs.getString("recruiter_name");
                 recruiter_id=rs.getString("recruiter_id");
-//                System.out.println("username="+username+"\n password="+password+"\n recruiter id="+recruiter_id);
+                System.out.println(" comapany login ------  \n username="+username+"\n password="+password+"\n recruiter id="+recruiter_id);
                 //next page
+                
+//                Job_search search=new Job_search();
+//                search.printData(recruiter_name, recruiter_id);
+//                search.setVisible(false);
                 
                 job_upload upload=new job_upload();
                 upload.printData(recruiter_name, recruiter_id);

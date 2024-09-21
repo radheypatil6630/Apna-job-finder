@@ -4,10 +4,7 @@
  */
 package com.mycompany.job_finder;
 
-import java.sql.ResultSetMetaData;
-import java.sql.DatabaseMetaData;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -16,16 +13,20 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
+import java.util.Map;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 import org.netbeans.lib.awtextra.AbsoluteConstraints;
 import org.netbeans.lib.awtextra.AbsoluteLayout;
 
@@ -41,12 +42,17 @@ public class Job_search extends javax.swing.JFrame {
     JPanel panel_new_1;
     String status="accept";
     private List<JPanel> jobPanels = new ArrayList<>();    
+    Map<String, JPanel> jobsearchPanels = new HashMap<>();
+    
+//     private List<Object[]> data = new ArrayList<>();
+    DefaultTableModel model;
    
    
     public Job_search() {
         initComponents();
         loadJobData();
-        
+        loadPanels();
+        loadCompanyData();
         
            setSize(1540, 1000);
         setLayout(null);
@@ -56,7 +62,7 @@ public class Job_search extends javax.swing.JFrame {
 //        jPanel1.setBounds(1, 120, 1480, 980);
         jScrollPane8.setBounds(10, 120, 1500, 630);
         
-        //scrollbar1.setBounds(1510, 0, 20, 1000);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -82,6 +88,11 @@ public class Job_search extends javax.swing.JFrame {
 
         jTextField1.setFont(new java.awt.Font("Lucida Bright", 0, 18)); // NOI18N
         jTextField1.setText("Find Jobs . . .");
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField1KeyReleased(evt);
+            }
+        });
 
         searchbtn.setFont(new java.awt.Font("Malgun Gothic", 0, 18)); // NOI18N
         searchbtn.setText("Search");
@@ -153,135 +164,8 @@ public class Job_search extends javax.swing.JFrame {
     private void searchbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchbtnActionPerformed
    
     
-//  String url = "jdbc:mysql://localhost:3306/jobfinder?serverTimezone=UTC";
-//    String db_username = "root";
-//    String db_password = "root";
-//
-//    try (Connection conn = DriverManager.getConnection(url, db_username, db_password)) {
-//        String sql = "SELECT * FROM job_upload WHERE job_name = ?";
-//        System.out.println("Executing SQL query: " + sql);
-//        PreparedStatement pstmt = conn.prepareStatement(sql);
-//        pstmt.setString(1, jTextField1.getText());
-//        ResultSet rs = pstmt.executeQuery();
-//
-//        // Hide all existing job panels
-//        for (Component component : jPanel1.getComponents()) {
-//            component.setVisible(false);
-//        }
-//
-//        boolean hasData = false;
-//
-//        while (rs.next()) {
-//            hasData = true;
-//            String jobName = rs.getString("job_name");
-//            String companyAddress = rs.getString("company_address");
-//            String jobSalary = rs.getString("job_salary");
-//            String jobDescription = rs.getString("job_description");
-//
-//            System.out.println("Data: " + jobName + " " + companyAddress + " " + jobSalary + " " + jobDescription);
-//
-//            JPanel jobPanel = createJobPanel(jobName, companyAddress, jobSalary, jobDescription);
-//            jobPanels.add(jobPanel);
-//            jPanel1.add(jobPanel);
-//            jobPanel.setVisible(true);
-//        }
-//
-//        if (!hasData) {
-//            JOptionPane.showMessageDialog(this, "Job not found");
-//            jTextField1.setText("");
-//        } else {
-//            JOptionPane.showMessageDialog(this, "Job found");
-//        }
-//
-//     } catch (SQLException e) {
-//        System.out.println("Connection failed!");
-//        e.printStackTrace();
-//     }
-String url = "jdbc:mysql://localhost:3306/jobfinder?serverTimezone=UTC";
-    String db_username = "root";
-    String db_password = "root";
-
-     try (Connection conn = DriverManager.getConnection(url, db_username, db_password)) {
-        String sql = "SELECT * FROM job_upload WHERE job_name = ?";
-        System.out.println("Executing SQL query: " + sql);
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, jTextField1.getText());
-        ResultSet rs = pstmt.executeQuery();
-
-        boolean hasData = false;
-
-        while (rs.next()) {
-            hasData = true;
-            String jobName = rs.getString("job_name");
-            String companyAddress = rs.getString("company_address");
-            String jobSalary = rs.getString("job_salary");
-            String jobDescription = rs.getString("job_description");
-
-            System.out.println("Data: " + jobName + " " + companyAddress + " " + jobSalary + " " + jobDescription);
-
-            // Hide all existing job panels
-            setAllJobPanelsVisible(false);
-
-            JPanel jobPanel = getJobPanelByName(jobName);
-            if (jobPanel != null) {
-                jobPanel.setVisible(true);
-            } else {
-                jobPanel = JobPanel(jobName, companyAddress, jobSalary, jobDescription);
-                jobPanels.add(jobPanel);
-                jPanel1.add(jobPanel);
-                jobPanel.setVisible(true);
-            }
-        }
-
-        if (!hasData) {
-            jTextField1.setText("");
-            JOptionPane.showMessageDialog(this, "Job not found");
-        } else {
-            JOptionPane.showMessageDialog(this, "Job found");
-        }
-
-        jPanel1.revalidate();
-        jPanel1.repaint();
-
-    } catch (SQLException e) {
-        System.out.println("Connection failed!");
-        e.printStackTrace();
-    }
-
-  
     }//GEN-LAST:event_searchbtnActionPerformed
 
-    
-    private void setAllJobPanelsVisible(boolean visible) {
-    for (Component component : jPanel1.getComponents()) {
-        component.setVisible(visible);
-    }
-}
-
-private JPanel getJobPanelByName(String jobName) {
-    for (Component component : jPanel1.getComponents()) {
-        if (component instanceof JPanel) {
-            JPanel jobPanel = (JPanel) component;
-            if (jobPanel.getName().equals(jobName)) {
-                return jobPanel;
-            }
-        }
-    }
-    return null;
-}
-
-private JPanel JobPanel(String jobName, String companyAddress, String jobSalary, String jobDescription) {
-    // Create and return a JPanel with the job details
-    JPanel jobPanel = new JPanel();
-    jobPanel.setName(jobName); // Set the name of the panel to the job name
-    // Add components to jobPanel (e.g., labels for jobName, companyAddress, jobSalary, jobDescription)
-    // Example:
-    jobPanel.add(new javax.swing.JLabel(jobName));
-    jobPanel.add(new javax.swing.JLabel(companyAddress));
-    jobPanel.add(new javax.swing.JLabel(jobSalary));
-    jobPanel.add(new javax.swing.JLabel(jobDescription));
-    return jobPanel;
-}
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         
@@ -295,6 +179,45 @@ private JPanel JobPanel(String jobName, String companyAddress, String jobSalary,
       
     }//GEN-LAST:event_jMenu2ActionPerformed
 
+    private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
+ String input = jTextField1.getText().trim().toLowerCase();
+    
+     boolean found = false;// check job is found or not
+    // Clear the existing panels
+    jPanel1.removeAll();
+
+    if (input.isEmpty()) {
+        // If search input is empty, reload all job panels
+        loadJobData(); 
+        loadPanels();
+    } else {
+        String jobName = null;
+        // Filter job panels by job name
+        for (JPanel panel : jobPanels) {
+            JTextField jobNameField = (JTextField) panel.getComponent(0); // assuming jobNameField is the first component in panel
+            jobName = jobNameField.getText().trim().toLowerCase();
+
+            if (jobName.contains(input)) {
+                jPanel1.add(panel);
+                found = true;
+            }
+            
+        }
+         // If no matching job was found, show the message
+    if (!found) {
+        JOptionPane.showMessageDialog(Job_search.this, "Job not found.");
+ 
+    }
+        
+    }
+
+    jPanel1.revalidate();
+    jPanel1.repaint();
+        
+    }//GEN-LAST:event_jTextField1KeyReleased
+private void showPanel(JPanel panel) {
+    panel.setVisible(true);
+}
     private void insertJobData(String jobName, String companyAddress, String jobSalary) {
         String url = "jdbc:mysql://localhost:3306/jobfinder";
         String db_username = "root";
@@ -316,71 +239,83 @@ private JPanel JobPanel(String jobName, String companyAddress, String jobSalary,
         }
     }
  private void loadJobData() {
-    String url = "jdbc:mysql://localhost:3306/jobfinder?serverTimezone=UTC";
+     jobPanels.clear();
+   String url = "jdbc:mysql://localhost:3306/jobfinder";
     String db_username = "root";
     String db_password = "root";
 
     try (Connection conn = DriverManager.getConnection(url, db_username, db_password)) {
-        System.out.println("Connection established");
-
-        // Verify database connection
-        DatabaseMetaData metaData = conn.getMetaData();
-        System.out.println("Database Product Name: " + metaData.getDatabaseProductName());
-//        System.out.println("Database Product Version: " + metaData.getDatabaseProductVersion());
-//        System.out.println("Driver Name: " + metaData.getDriverName());
-//        System.out.println("Driver Version: " + metaData.getDriverVersion());
-//        System.out.println("Current Timezone: " + TimeZone.getDefault().getID());
-
-        // Verify table existence
-        ResultSet tables = metaData.getTables(null, null, "job_upload", null);
-        if (tables.next()) {
-            System.out.println("Table job_upload exists");
-        } else {
-            System.out.println("Table job_upload does not exist");
-        }
-
-        String sql = "SELECT * FROM job_upload";
-        System.out.println("Executing SQL query: " + sql);
+        String sql = "SELECT job_name, company_address, job_salary, job_description FROM job_upload";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         ResultSet rs = pstmt.executeQuery();
 
-        // Print ResultSet metadata
-        ResultSetMetaData rsmd = rs.getMetaData();
-        int columnsNumber = rsmd.getColumnCount();
-        System.out.println("Columns in ResultSet:");
-        for (int i = 1; i <= columnsNumber; i++) {
-            System.out.println(rsmd.getColumnName(i) + " (" + rsmd.getColumnTypeName(i) + ")");
-        }
-
-        boolean hasData = false;
-
         while (rs.next()) {
-            hasData = true;
             String jobName = rs.getString("job_name");
             String companyAddress = rs.getString("company_address");
             String jobSalary = rs.getString("job_salary");
             String jobDescription = rs.getString("job_description");
-                    recruiter_id= rs.getString("recruiter_id");
-                    recruiter_name=rs.getString("recruiter_name");
-            System.out.println("Data: " + jobName + " " + companyAddress + " " + jobSalary + " " + jobDescription+" "+recruiter_id);
 
             // Create and add the job panel to the UI
             JPanel jobPanel = createJobPanel(jobName, companyAddress, jobSalary, jobDescription);
             jobPanels.add(jobPanel);
-            jPanel1.add(jobPanel);
+//            jPanel1.add(jobPanel);
         }
-
-        if (!hasData) {
-            System.out.println("No data found in job_upload table");
-        }
-
         jPanel1.revalidate();
         jPanel1.repaint();
     } catch (SQLException e) {
         e.printStackTrace();
     }
 }
+ 
+  private void loadPanels(){
+        for (JPanel panel : jobPanels) {
+            jPanel1.add(panel);
+        }
+   }
 
+// public void printData(String name, String recruiter_id) {
+//        this.recruiter_id = recruiter_id;
+//        this.recruiter_name = name;
+//        System.out.println("username=" + recruiter_name + "\n recruiter id=" + recruiter_id);
+//    }
+
+   private void loadCompanyData() {
+    String url = "jdbc:mysql://localhost:3306/jobfinder?serverTimezone=UTC";
+    String db_username = "root";
+    String db_password = "root";
+
+    try (Connection conn = DriverManager.getConnection(url, db_username, db_password)) {
+//        System.out.println("Connection established");
+
+        String sql = "SELECT * FROM company_registration";
+        System.out.println("Executing SQL query: " + sql);
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+
+//        // Print ResultSet metadata
+//        ResultSetMetaData rsmd = rs.getMetaData();
+//        int columnsNumber = rsmd.getColumnCount();
+
+
+        boolean hasData = false;
+//        data.clear(); // Clear the data list before adding new data
+
+        while (rs.next()) {
+            recruiter_name=rs.getString("recruiter_name");
+            recruiter_id=rs.getString("recruiter_id");
+            
+//             System.out.println(" job_search ------  \n recruite name ="+recruiter_name+"\n recruiter id="+recruiter_id);
+        }
+        
+          System.out.println(" job_search ------  \n recruite name ="+recruiter_name+"\n recruiter id="+recruiter_id);
+
+        
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+  
   public void printText(String candidate_name,String candidate_id,String mob_no){
       this.candidate_name=candidate_name;
       this.candidate_id=candidate_id;
@@ -412,7 +347,7 @@ private JPanel JobPanel(String jobName, String companyAddress, String jobSalary,
         panel.add(jobNameField, new AbsoluteConstraints(20, 15, 350, 40));
         panel.add(companyAddressField, new AbsoluteConstraints(25, 70, 300, 30));
         panel.add(new JLabel("salary"), new AbsoluteConstraints(20, 110, 50, 30));
-        panel.add(jobSalaryField, new AbsoluteConstraints(80, 110, 250, 30));
+        panel.add(jobSalaryField, new AbsoluteConstraints(80, 110, 250, 40));
         panel.add(new JLabel("Description"), new AbsoluteConstraints(20, 170, 80, 30));
         panel.add(jobDescriptionArea, new AbsoluteConstraints(60, 200, 380, 160));
         panel.add(ApplyButton, new AbsoluteConstraints(200, 400, 100, 50));
@@ -429,17 +364,7 @@ private JPanel JobPanel(String jobName, String companyAddress, String jobSalary,
         });
 
         return panel;
-    }
-
-//    jMenuItem1.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                Applied_jobs obj = new Applied_jobs();
-//                obj.setVisible(true);
-//            }
-//        });
-    
-   
+    }   
     /**
      * @param args the command line arguments
      */

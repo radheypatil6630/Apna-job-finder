@@ -6,6 +6,7 @@ package com.mycompany.job_finder;
  import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 /**
  *
@@ -28,10 +29,7 @@ public class Candidate_Login extends javax.swing.JFrame {
           jButton2.setBounds(760, 430,200, 50);
           jButton3.setBounds(10, 740,80, 40);
           
-//          jLabel1.setBounds(450, 200,600, 70);
-//          jLabel2.setBounds(800, 280,400, 50);
-//          jButton1.setBounds(370, 420,350, 60);
-//          jButton2.setBounds(800, 420,350, 60);
+         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     /**

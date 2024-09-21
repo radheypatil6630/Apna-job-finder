@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -56,8 +57,8 @@ String status,jobSalary,Recruiter_name,jobName;
       //  insertJobData(jobNameField.getText(), companyAddressField.getText(), jobSalaryField.getText());
          setSize(800, 600);
          setLayout(null);
-//        jTable1.setBounds(20,40,680,550);
-//        setLayout(null);
+
+         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     /**

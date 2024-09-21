@@ -5,6 +5,7 @@
 package com.mycompany.job_finder;
 
 import java.sql.*;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -30,6 +31,8 @@ public class Company_register extends javax.swing.JFrame {
 
             label2.setBounds(1100,740,300,40);
            jButton1.setBounds(1410, 740,100, 40);//login button
+           
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     /**
